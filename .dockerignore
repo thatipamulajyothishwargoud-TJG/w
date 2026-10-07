@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.*
+mysql-data
+uploads
+storage
+private
+hrportal-private
+error_log
+*.log

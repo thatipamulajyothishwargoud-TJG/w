@@ -10,6 +10,16 @@ CloudFen is a PHP and MySQL HR portal with separate employee and HR/admin workfl
 - MySQL-backed records, role-based access checks, CSRF protection, and fictional demo profiles
 - Local Three.js and other required frontend assets
 
+## Deploy the full application to Render
+
+The repository includes a Render Blueprint for a PHP web service, a private MySQL 8.4 service, and persistent disks for the database and employee uploads. In Render, create a new Blueprint from this repository's `main` branch. The Blueprint creates a separate `cloudfen-hrportal-v2` service and does not modify the older `cloudfen-hrportal` service.
+
+During Blueprint setup, provide `SETUP_ADMIN_EMAIL` for the first administrator. Render generates the administrator password, demo-account password, database passwords, and JWT secret; keep those values in Render's environment settings and never copy them into GitHub. The web service initializes the schema and fictional employee/demo records when it starts. Demo credentials can be read from the service's environment settings.
+
+The persistent disks make uploaded documents and MySQL records survive restarts and redeploys. Render charges for the two paid service instances and their disk storage; review the Blueprint's displayed monthly estimate before creating the services. If you need a no-cost preview, remove the persistent disks and use free instances only with the understanding that records and uploads can be lost when Render restarts or redeploys them.
+
+After the Blueprint is live, open the new web service URL and sign in with the administrator email and generated password. Keep the database service private; only the PHP web service needs a public URL.
+
 ## Run on this workstation
 
 This checkout uses the isolated local database and development credentials stored outside the repository in `C:\Users\thati\hrportal-runtime`. Open PowerShell in this folder and run:

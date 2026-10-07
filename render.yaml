@@ -1,0 +1,73 @@
+services:
+  - type: pserv
+    name: cloudfen-hrportal-mysql
+    runtime: image
+    image:
+      url: docker.io/library/mysql:8.4
+    plan: 0.5c-512mb
+    region: singapore
+    envVars:
+      - key: MYSQL_DATABASE
+        value: cloudfen_hrportal
+      - key: MYSQL_USER
+        value: cloudfen_app
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+    disk:
+      name: cloudfen-mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+
+  - type: web
+    name: cloudfen-hrportal-v2
+    runtime: docker
+    repo: https://github.com/thatipamulajyothishwargoud-TJG/w.git
+    branch: main
+    dockerfilePath: ./Dockerfile
+    plan: 0.5c-512mb
+    region: singapore
+    autoDeployTrigger: commit
+    healthCheckPath: /healthz.php
+    disk:
+      name: cloudfen-uploads
+      mountPath: /var/data/cloudfen
+      sizeGB: 1
+    envVars:
+      - key: APP_NAME
+        value: CloudFen HR Workspace
+      - key: APP_URL
+        value: https://cloudfen-hrportal-v2.onrender.com
+      - key: APP_TIMEZONE
+        value: Asia/Kolkata
+      - key: APP_DEMO_MODE
+        value: "true"
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: cloudfen-hrportal-mysql
+          property: host
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        value: cloudfen_hrportal
+      - key: DB_USER
+        value: cloudfen_app
+      - key: DB_PASS
+        fromService:
+          type: pserv
+          name: cloudfen-hrportal-mysql
+          envVarKey: MYSQL_PASSWORD
+      - key: JWT_SECRET
+        generateValue: true
+      - key: UPLOAD_BASE_PATH
+        value: /var/data/cloudfen/uploads
+      - key: SETUP_ADMIN_EMAIL
+        value: thatipamulajhansi@gmail.com
+      - key: SETUP_ADMIN_NAME
+        value: Workspace Administrator
+      - key: SETUP_ADMIN_PASSWORD
+        generateValue: true
+      - key: DEMO_ACCOUNT_PASSWORD
+        generateValue: true
