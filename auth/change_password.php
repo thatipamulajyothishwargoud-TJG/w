@@ -27,9 +27,7 @@ if (empty($_SESSION['user_id'])) {
 // If the flag is not set (they ended up here directly without a temp password),
 // just send them to their normal dashboard.
 if (empty($_SESSION['force_password_change'])) {
-    $dest = in_array($_SESSION['role'] ?? '', ['hr_admin', 'super_admin'])
-        ? '/admin/dashboard.php'
-        : '/employee/dashboard.php';
+    $dest = roleDashboardPath((string)($_SESSION['role'] ?? 'employee'));
     header('Location: ' . APP_URL . $dest);
     exit;
 }
@@ -73,9 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['force_password_change']);
 
                 // Redirect to the correct dashboard
-                $dest = in_array($_SESSION['role'] ?? '', ['hr_admin', 'super_admin'])
-                    ? '/admin/dashboard.php'
-                    : '/employee/dashboard.php';
+                $dest = roleDashboardPath((string)($_SESSION['role'] ?? 'employee'));
 
                 header('Location: ' . APP_URL . $dest . '?pw_changed=1');
                 exit;

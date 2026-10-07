@@ -15,7 +15,7 @@ startSecureSession();
 
 // Redirect already-logged-in users
 if (!empty($_SESSION['user_id'])) {
-    header('Location: ' . APP_URL . '/employee/dashboard.php');
+    header('Location: ' . APP_URL . roleDashboardPath((string)($_SESSION['role'] ?? 'employee')));
     exit;
 }
 

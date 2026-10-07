@@ -8,7 +8,7 @@ require_once __DIR__ . '/../includes/dashboard-operations.php';
 
 sendSecurityHeaders();
 startSecureSession();
-$user   = requireAnyRole();
+$user   = requireRole('employee');
 $userId = $user['id'];
 $db     = getDB();
 

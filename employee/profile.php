@@ -98,9 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $emergencyContact = decodeEmergencyContact((string)($profile['emergency_contact'] ?? ''));
 
             if ($mustCompleteProfile && !userProfileRequiresCompletion($userId)) {
-                $dest = in_array($user['role'], ['hr_admin', 'super_admin'], true)
-                    ? '/admin/dashboard.php'
-                    : '/employee/dashboard.php';
+                $dest = roleDashboardPath((string)$user['role']);
                 header('Location: ' . APP_URL . $dest . '?profile_completed=1');
                 exit;
             }
@@ -167,7 +165,7 @@ foreach ($allDocs as $d) {
     }
 }
 
-$roleLabels = ['employee' => 'Employee', 'hr_admin' => 'HR Admin', 'super_admin' => 'Super Admin'];
+$roleLabels = ['employee' => 'Employee', 'hr_admin' => 'HR Manager', 'super_admin' => 'Administrator'];
 $roleLabel  = $roleLabels[$profile['role'] ?? 'employee'] ?? 'User';
 $isEmployee = ($profile['role'] ?? '') === 'employee';
 

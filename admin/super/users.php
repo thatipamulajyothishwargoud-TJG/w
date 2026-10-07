@@ -114,8 +114,8 @@ pageHead('User Role Management');
               <select name="role_filter" class="form-control">
                 <option value="">All Roles</option>
                 <option value="employee"    <?= $roleF === 'employee'    ? 'selected' : '' ?>>Employee</option>
-                <option value="hr_admin"    <?= $roleF === 'hr_admin'    ? 'selected' : '' ?>>HR Admin</option>
-                <option value="super_admin" <?= $roleF === 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
+                <option value="hr_admin"    <?= $roleF === 'hr_admin'    ? 'selected' : '' ?>>HR Manager</option>
+                <option value="super_admin" <?= $roleF === 'super_admin' ? 'selected' : '' ?>>Administrator</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary" style="margin-bottom:0;">Search</button>
@@ -183,8 +183,8 @@ pageHead('User Role Management');
                         <input type="hidden" name="target_id"  value="<?= (int)$u['id'] ?>">
                         <select name="new_role" class="form-control" style="font-size:.82rem;padding:6px 10px;">
                           <option value="employee"    <?= $u['role'] === 'employee'    ? 'selected' : '' ?>>Employee</option>
-                          <option value="hr_admin"    <?= $u['role'] === 'hr_admin'    ? 'selected' : '' ?>>HR Admin</option>
-                          <option value="super_admin" <?= $u['role'] === 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
+                          <option value="hr_admin"    <?= $u['role'] === 'hr_admin'    ? 'selected' : '' ?>>HR Manager</option>
+                          <option value="super_admin" <?= $u['role'] === 'super_admin' ? 'selected' : '' ?>>Administrator</option>
                         </select>
                         <button type="submit" class="btn btn-sm" style="background:rgba(168,85,247,.12);color:#7c3aed;border:1px solid rgba(168,85,247,.3);white-space:nowrap;">Set Role</button>
                       </form>

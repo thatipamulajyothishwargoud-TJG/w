@@ -57,8 +57,10 @@ function renderSidebar(array $user, string $activePage = ''): void {
     $initials = htmlspecialchars(strtoupper(substr($user['name'] ?? 'U', 0, 1)), ENT_QUOTES, 'UTF-8');
     $name     = htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8');
 
-    $roleLabelMap = array('super_admin' => 'Super Admin', 'hr_admin' => 'HR Admin');
+    $roleLabelMap = array('super_admin' => 'Administrator', 'hr_admin' => 'HR Manager');
     $roleLabel    = htmlspecialchars($roleLabelMap[$role] ?? 'Employee', ENT_QUOTES, 'UTF-8');
+    $dashboardHref = $role === 'hr_admin' ? '/hr/dashboard.php' : '/admin/dashboard.php';
+    $sectionLabel = $role === 'hr_admin' ? 'HR Manager' : 'Admin';
     $canUseTimesheets = function_exists('userCanAccessTimesheetsModule')
         ? userCanAccessTimesheetsModule((int)($user['id'] ?? 0), (string)$role)
         : true;
@@ -77,8 +79,8 @@ function renderSidebar(array $user, string $activePage = ''): void {
     echo '  <nav class="sidebar-nav">' . "\n";
 
     if ($isAdmin) {
-        echo '    <div class="nav-section">Admin</div>' . "\n";
-        echo '    <a href="/admin/dashboard.php"      class="nav-item' . $a('dashboard')      . '">Dashboard</a>' . "\n";
+        echo '    <div class="nav-section">' . $sectionLabel . '</div>' . "\n";
+        echo '    <a href="' . $dashboardHref . '"      class="nav-item' . $a('dashboard')      . '">Dashboard</a>' . "\n";
         echo '<a href="/admin/people.php" class="nav-item' . $a('people') . '">People directory</a>';
         echo '    <a href="/admin/employees.php"      class="nav-item' . $a('employees')      . '">Employees</a>' . "\n";
         echo '    <a href="/admin/create_account.php" class="nav-item' . $a('create_account') . '">Create Account</a>' . "\n";

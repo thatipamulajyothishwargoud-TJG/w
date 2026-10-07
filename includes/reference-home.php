@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__.'/layout.php';sendSecurityHeaders();sendNoCacheHeaders();
-$signedIn=!empty($_SESSION['user_id']);$staticPreview=defined('APP_STATIC_PREVIEW')&&APP_STATIC_PREVIEW;$destination=$staticPreview?'/preview-dashboard.php':($signedIn?(in_array($_SESSION['role']??'', ['hr_admin','super_admin'],true)?'/admin/dashboard.php':'/employee/dashboard.php'):'/auth/login.php');
+$signedIn=!empty($_SESSION['user_id']);$staticPreview=defined('APP_STATIC_PREVIEW')&&APP_STATIC_PREVIEW;$destination=$staticPreview?'/preview-dashboard.php':($signedIn?roleDashboardPath((string)($_SESSION['role']??'employee')):'/auth/login.php');
 pageHead('A new dimension of work');
 ?>
 <body class="reference-landing">

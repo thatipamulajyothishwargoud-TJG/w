@@ -9,9 +9,18 @@ sendNoCacheHeaders();
 checkIpBlock();
 startSecureSession();
 
+$portals = [
+    'employee' => ['label' => 'Employee', 'role' => 'employee', 'route' => '/auth/employee-login.php'],
+    'hr' => ['label' => 'HR Manager', 'role' => 'hr_admin', 'route' => '/auth/hr-login.php'],
+    'admin' => ['label' => 'Administrator', 'role' => 'super_admin', 'route' => '/auth/administrator-login.php'],
+];
+$portalValue = $_GET['portal'] ?? $_POST['portal'] ?? '';
+$portal = is_string($portalValue) ? $portalValue : '';
+if (!isset($portals[$portal])) $portal = '';
+$portalMismatchRoute = '';
+
 if (!empty($_SESSION['user_id'])) {
-    $dest = in_array($_SESSION['role'], ['hr_admin','super_admin'])
-        ? '/admin/dashboard.php' : '/employee/dashboard.php';
+    $dest = roleDashboardPath((string)($_SESSION['role'] ?? 'employee'));
     header('Location: ' . APP_URL . $dest); exit;
 }
 
@@ -64,6 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Invalid email or password.';
             }
             auditLog('login_failed', 'users', $user['id'] ?? null, ['ip' => $ip]);
+        } elseif ($portal !== '' && $user['role'] !== $portals[$portal]['role']) {
+            $rolePortal = match ($user['role']) {
+                'employee' => 'employee',
+                'hr_admin' => 'hr',
+                default => 'admin',
+            };
+            $portalMismatchRoute = $portals[$rolePortal]['route'];
+            $error = 'This account belongs to the ' . $portals[$rolePortal]['label'] . ' portal. Use its sign-in page.';
         } elseif ($user['status'] === 'deactivated') {
             $error = 'This account has been deactivated. Contact HR.';
         } elseif ($user['status'] === 'locked' && $user['locked_until'] && strtotime($user['locked_until']) > time()) {
@@ -139,16 +156,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header('Location: ' . APP_URL . '/employee/profile.php?complete=1'); exit;
             }
             $next = $_GET['next'] ?? '';
-            $dest = in_array($user['role'], ['hr_admin','super_admin']) ? '/admin/dashboard.php' : '/employee/dashboard.php';
+            $dest = roleDashboardPath((string)$user['role']);
             if ($next && preg_match('#^/[a-zA-Z0-9/_\-.]+\.php$#', $next) && strpos($next,'//') === false && strpos($next,'..') === false) {
-                $dest = $next;
+                $hrAdminDashboard = $user['role'] === 'hr_admin' && $next === '/admin/dashboard.php';
+                if ($portal === '' && !$hrAdminDashboard) $dest = $next;
             }
             header('Location: ' . APP_URL . $dest); exit;
         }
     }
 }
 
-pageHead('Sign In');
+$portalTitle = $portal !== '' ? $portals[$portal]['label'] . ' Sign In' : 'Sign In';
+pageHead($portalTitle);
 ?>
 <body class="reference-login">
 <div class="auth-shell">
@@ -166,22 +185,30 @@ pageHead('Sign In');
     </div>
   </div>
   <div class="auth-form-wrap">
-    <h1>Sign In</h1>
-    <p class="sub">Questions? <a href="<?= e(getHrContactUrl()) ?>">Contact HR</a></p>
+    <h1><?= e($portalTitle) ?></h1>
+    <p class="sub"><?= $portal !== '' ? 'Sign in to your ' . e($portals[$portal]['label']) . ' workspace.' : 'Choose your workspace to continue.' ?> Questions? <a href="<?= e(getHrContactUrl()) ?>">Contact HR</a></p>
+    <nav class="portal-login-grid" aria-label="Choose a sign-in portal">
+      <?php foreach ($portals as $key => $item): ?>
+      <a href="<?= e($item['route']) ?>" class="portal-login-option<?= $portal === $key ? ' is-active' : '' ?>"<?= $portal === $key ? ' aria-current="page"' : '' ?>>
+        <strong><?= e($item['label']) ?></strong><span><?= $key === 'employee' ? 'My work &amp; profile' : ($key === 'hr' ? 'People operations' : 'Workspace controls') ?></span>
+      </a>
+      <?php endforeach; ?>
+    </nav>
     <?php if ($timeout): ?><div class="alert alert-warn">⏱️ Session expired. Please sign in again.</div><?php endif; ?>
     <?php if (isset($_GET['security'])): ?><div class="alert alert-warn">🔒 Session invalidated for security. Please sign in again.</div><?php endif; ?>
     <?php if (isset($_GET['deactivated'])): ?><div class="alert alert-warn">🔒 This account has been deactivated. Contact HR.</div><?php endif; ?>
-    <?php if ($error): ?><div class="alert alert-error">⚠️ <?= e($error) ?><?php if (!empty($resendLink)): ?> <a href="<?= e($resendLink) ?>" style="color:var(--cyan);font-weight:700;">Resend verification email →</a><?php endif; ?></div><?php endif; ?>
+    <?php if ($error): ?><div class="alert alert-error">⚠️ <?= e($error) ?><?php if ($portalMismatchRoute): ?> <a href="<?= e($portalMismatchRoute) ?>" style="font-weight:700;">Go to that portal →</a><?php endif; ?><?php if (!empty($resendLink)): ?> <a href="<?= e($resendLink) ?>" style="color:var(--cyan);font-weight:700;">Resend verification email →</a><?php endif; ?></div><?php endif; ?>
     <?php if (defined('APP_DEMO_MODE') && APP_DEMO_MODE): ?>
-    <p class="demo-login-note">Fictional demo workspace. Choose your role, then enter the demo password.</p>
+    <p class="demo-login-note">Fictional demo workspace. Choose a demo profile, then enter the demo password.</p>
     <div class="demo-role-picker" role="group" aria-label="Choose demo sign-in role">
-      <button type="button" data-email="demo.ava.bennett@example.invalid" aria-pressed="false">Employee</button>
-      <button type="button" data-email="demo.hr@example.invalid" aria-pressed="false">HR manager</button>
-      <button type="button" data-email="demo.admin@example.invalid" aria-pressed="false">Administrator</button>
+      <?php if ($portal === '' || $portal === 'employee'): ?><button type="button" data-email="demo.ava.bennett@example.invalid" aria-pressed="false">Employee demo</button><?php endif; ?>
+      <?php if ($portal === '' || $portal === 'hr'): ?><button type="button" data-email="demo.hr@example.invalid" aria-pressed="false">HR Manager demo</button><?php endif; ?>
+      <?php if ($portal === '' || $portal === 'admin'): ?><button type="button" data-email="demo.admin@example.invalid" aria-pressed="false">Administrator demo</button><?php endif; ?>
     </div>
     <?php endif; ?>
     <form method="POST" autocomplete="off" data-loading>
       <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+      <?php if ($portal !== ''): ?><input type="hidden" name="portal" value="<?= e($portal) ?>"><?php endif; ?>
       <?= honeypotField() ?>
       <div class="form-group">
         <label>Email Address</label>

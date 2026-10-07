@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Super admin only can create other admins
     if (in_array($role, ['hr_admin', 'super_admin'], true) && $user['role'] !== 'super_admin') {
-        $msg = 'Only Super Admin can create HR Admin or Super Admin accounts.';
+        $msg = 'Only an Administrator can create HR Manager or Administrator accounts.';
         $msgType = 'error';
     } elseif (!$fullName || !$email || !$role || !$dateOfBirth || !$address || !$emergencyContactName || !$emergencyContactPhone) {
         $msg = 'Full name, email, role, date of birth, address, and emergency contact are required.';
@@ -89,11 +89,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($sendWelcome) {
                 $appUrl  = rtrim(defined('APP_URL') ? APP_URL : '', '/');
                 $appName = defined('APP_NAME') ? APP_NAME : 'CloudFen HR Portal';
-                $roleLabelMap = ['super_admin' => 'Super Admin', 'hr_admin' => 'HR Admin'];
+                $roleLabelMap = ['super_admin' => 'Administrator', 'hr_admin' => 'HR Manager'];
                 $roleLabel    = $roleLabelMap[$role] ?? 'Employee';
                 $verifyLink   = $appUrl . '/auth/verify.php?token=' . urlencode($verifyToken);
                 $btnStyle     = "background:#1fa0c0;color:#000;padding:13px 28px;border-radius:8px;text-decoration:none;font-weight:700;display:inline-block;margin-top:8px;";
-                $loginUrl = $appUrl . '/auth/login.php';
+                $loginRoute = match ($role) {
+                    'hr_admin' => '/auth/hr-login.php',
+                    'super_admin' => '/auth/administrator-login.php',
+                    default => '/auth/employee-login.php',
+                };
+                $loginUrl = $appUrl . $loginRoute;
                 $body = emailTemplate('Welcome to ' . $appName, "
                     <p>Hi <strong>" . htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8') . "</strong>,</p>
                     <p>Your <strong>" . htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') . "</strong> account on the <strong>" . htmlspecialchars($appName, ENT_QUOTES, 'UTF-8') . "</strong> has been created and is ready to use.</p>
@@ -288,12 +293,12 @@ pageHead('Create Account');
                   <option value="">— Select Role —</option>
                   <option value="employee" <?= (($_POST['role'] ?? '') === 'employee')    ? 'selected' : '' ?>>Employee</option>
                   <?php if ($user['role'] === 'super_admin'): ?>
-                  <option value="hr_admin" <?= (($_POST['role'] ?? '') === 'hr_admin')    ? 'selected' : '' ?>>HR Admin</option>
-                  <option value="super_admin" <?= (($_POST['role'] ?? '') === 'super_admin') ? 'selected' : '' ?>>Super Admin</option>
+                  <option value="hr_admin" <?= (($_POST['role'] ?? '') === 'hr_admin')    ? 'selected' : '' ?>>HR Manager</option>
+                  <option value="super_admin" <?= (($_POST['role'] ?? '') === 'super_admin') ? 'selected' : '' ?>>Administrator</option>
                   <?php endif; ?>
                 </select>
                 <?php if ($user['role'] !== 'super_admin'): ?>
-                  <small style="color:var(--gray-400);">HR Admins can only create Employee accounts. Contact Super Admin to create admin roles.</small>
+                  <small style="color:var(--gray-400);">HR Managers can only create Employee accounts. Contact an Administrator to create admin roles.</small>
                 <?php endif; ?>
               </div>
 

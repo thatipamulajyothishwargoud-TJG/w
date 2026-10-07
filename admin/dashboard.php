@@ -6,7 +6,7 @@ require_once __DIR__ . '/../includes/layout.php';
 require_once __DIR__ . '/../includes/workspace.php';
 
 sendSecurityHeaders();
-$user = requireRole('hr_admin', 'super_admin');
+$user = requireRole('super_admin');
 $db   = getDB();
 
 // All queries are fixed — no user input

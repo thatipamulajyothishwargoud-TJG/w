@@ -41,6 +41,14 @@ function e(string $s): string {
     return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function roleDashboardPath(string $role): string {
+    return match ($role) {
+        'super_admin' => '/admin/dashboard.php',
+        'hr_admin' => '/hr/dashboard.php',
+        default => '/employee/dashboard.php',
+    };
+}
+
 function sanitizeEmail(string $s): string {
     return strtolower(trim(filter_var($s, FILTER_SANITIZE_EMAIL) ?: ''));
 }
