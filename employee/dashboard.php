@@ -8,6 +8,10 @@ require_once __DIR__ . '/../includes/dashboard-operations.php';
 
 sendSecurityHeaders();
 startSecureSession();
+if (!empty($_SESSION['user_id']) && ($_SESSION['role'] ?? '') !== 'employee') {
+    header('Location: ' . APP_URL . roleDashboardPath((string)$_SESSION['role']));
+    exit;
+}
 $user   = requireRole('employee');
 $userId = $user['id'];
 $db     = getDB();

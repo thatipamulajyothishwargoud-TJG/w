@@ -6,6 +6,11 @@ require_once __DIR__ . '/../includes/layout.php';
 require_once __DIR__ . '/../includes/workspace.php';
 
 sendSecurityHeaders();
+startSecureSession();
+if (!empty($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'hr_admin') {
+    header('Location: ' . APP_URL . '/hr/dashboard.php');
+    exit;
+}
 $user = requireRole('super_admin');
 $db   = getDB();
 
