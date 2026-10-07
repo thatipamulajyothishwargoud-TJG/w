@@ -1,0 +1,133 @@
+/* Motion layer for the authenticated workspace. */
+@keyframes portal-ambient-drift {
+  0%, 100% { transform: translate3d(-2%, -1%, 0) scale(1); }
+  50% { transform: translate3d(2%, 2%, 0) scale(1.08); }
+}
+@keyframes portal-ambient-drift-reverse {
+  0%, 100% { transform: translate3d(2%, 1%, 0) scale(1.05); }
+  50% { transform: translate3d(-3%, -2%, 0) scale(.98); }
+}
+@keyframes portal-rise {
+  from { opacity: 0; transform: translate3d(0, 18px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes portal-slide-in {
+  from { opacity: 0; transform: translate3d(-18px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes portal-drop-in {
+  from { opacity: 0; transform: translate3d(0, -14px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes portal-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes portal-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+@keyframes portal-chart-grow {
+  from { transform: scaleY(0); transform-origin: bottom; opacity: .35; }
+  to { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+}
+
+body:has(.app-shell) { isolation: isolate; overflow-x: hidden; }
+body:has(.app-shell)::before,
+body:has(.app-shell)::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  width: 58vw;
+  height: 58vw;
+  border-radius: 50%;
+  filter: blur(22px);
+  opacity: .2;
+  will-change: transform;
+}
+body:has(.app-shell)::before {
+  top: -32vw;
+  right: -16vw;
+  background: radial-gradient(circle, rgba(90,180,235,.65), transparent 66%);
+  animation: portal-ambient-drift 18s ease-in-out infinite;
+}
+body:has(.app-shell)::after {
+  bottom: -34vw;
+  left: -18vw;
+  background: radial-gradient(circle, rgba(212,111,191,.58), transparent 66%);
+  animation: portal-ambient-drift-reverse 23s ease-in-out infinite;
+}
+
+.app-shell .sidebar { animation: portal-slide-in .7s cubic-bezier(.2,.8,.2,1) both; }
+.app-shell .topbar { animation: portal-drop-in .65s cubic-bezier(.2,.8,.2,1) .06s both; }
+.app-shell .page-body > * { animation: portal-rise .65s cubic-bezier(.2,.8,.2,1) both; }
+.app-shell .page-body > *:nth-child(2) { animation-delay: .07s; }
+.app-shell .page-body > *:nth-child(3) { animation-delay: .13s; }
+.app-shell .page-body > *:nth-child(4) { animation-delay: .19s; }
+.app-shell .page-body > *:nth-child(5) { animation-delay: .25s; }
+.app-shell .page-body > *:nth-child(6) { animation-delay: .31s; }
+
+.app-shell .nav-item,
+.app-shell .workspace-tools .btn,
+.app-shell .topbar-right .btn,
+.app-shell .btn { transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease; }
+.app-shell .nav-item:hover { transform: translate3d(5px,0,0); }
+.app-shell .workspace-tools .btn:hover,
+.app-shell .topbar-right .btn:hover,
+.app-shell .btn:hover { transform: translate3d(0,-3px,0); box-shadow: 0 10px 22px rgba(61,91,151,.15); }
+
+.app-shell .overview-hero,
+.app-shell .workspace-hero,
+.app-shell .rail-promo { background-size: 180% 180%; animation: portal-shimmer 16s ease-in-out infinite; }
+.app-shell .overview-hero .office-scene,
+.app-shell .workspace-hero .office-scene { animation: portal-float 6s ease-in-out infinite; }
+.app-shell .metric,
+.app-shell .stat-card,
+.app-shell .module-card,
+.app-shell .task-card,
+.app-shell .job-card,
+.app-shell .person-card { transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, border-color .3s ease; }
+.app-shell .metric:hover,
+.app-shell .stat-card:hover,
+.app-shell .module-card:hover,
+.app-shell .task-card:hover,
+.app-shell .job-card:hover,
+.app-shell .person-card:hover { transform: translate3d(0,-6px,0); box-shadow: 0 24px 48px rgba(73,90,142,.18), inset 0 1px rgba(255,255,255,.92); }
+
+.app-shell .attendance-bar,
+.app-shell .analytics-bar { animation: portal-chart-grow .9s cubic-bezier(.2,.8,.2,1) both; }
+.app-shell .attendance-bar:nth-child(2), .app-shell .analytics-bar:nth-child(2) { animation-delay: .08s; }
+.app-shell .attendance-bar:nth-child(3), .app-shell .analytics-bar:nth-child(3) { animation-delay: .16s; }
+.app-shell .attendance-bar:nth-child(4), .app-shell .analytics-bar:nth-child(4) { animation-delay: .24s; }
+.app-shell .attendance-bar:nth-child(5), .app-shell .analytics-bar:nth-child(5) { animation-delay: .32s; }
+.app-shell .attendance-bar:nth-child(6), .app-shell .analytics-bar:nth-child(6) { animation-delay: .4s; }
+.app-shell .attendance-bar:nth-child(7), .app-shell .analytics-bar:nth-child(7) { animation-delay: .48s; }
+.app-shell .donut { animation: portal-float 7s ease-in-out .5s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  body:has(.app-shell)::before,
+  body:has(.app-shell)::after,
+  .app-shell .sidebar,
+  .app-shell .topbar,
+  .app-shell .page-body > *,
+  .app-shell .overview-hero,
+  .app-shell .workspace-hero,
+  .app-shell .rail-promo,
+  .app-shell .overview-hero .office-scene,
+  .app-shell .workspace-hero .office-scene,
+  .app-shell .attendance-bar,
+  .app-shell .analytics-bar,
+  .app-shell .donut { animation: none !important; }
+  .app-shell .nav-item:hover,
+  .app-shell .workspace-tools .btn:hover,
+  .app-shell .topbar-right .btn:hover,
+  .app-shell .btn:hover,
+  .app-shell .metric:hover,
+  .app-shell .stat-card:hover,
+  .app-shell .module-card:hover,
+  .app-shell .task-card:hover,
+  .app-shell .job-card:hover,
+  .app-shell .person-card:hover { transform: none; }
+}

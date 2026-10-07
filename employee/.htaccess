@@ -1,0 +1,10 @@
+# ── employee/ — Employee pages: deny indexing and limit methods ──────────
+Options -Indexes -ExecCGI -Includes
+<LimitExcept GET POST HEAD>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</LimitExcept>

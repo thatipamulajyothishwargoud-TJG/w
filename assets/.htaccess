@@ -1,0 +1,13 @@
+# ── assets/ — Static files only: block PHP, deny directory listing ───────
+Options -Indexes -ExecCGI -Includes
+<FilesMatch "\.(?i)(php[0-9]?|phtml|phar|sh|cgi|pl|py|rb|asp|aspx|jsp|cfm|exe|bat|cmd)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+    RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .phar
+    RemoveType    .php .php3 .php4 .php5 .php7 .php8 .phtml .phar
+</FilesMatch>

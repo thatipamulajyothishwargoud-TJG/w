@@ -1,0 +1,16 @@
+# ── admin/super/ — Super admin area: strict controls ────────────────────
+Options -Indexes -ExecCGI -Includes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Deny empty User-Agent (bots)
+    RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+<LimitExcept GET POST HEAD>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</LimitExcept>

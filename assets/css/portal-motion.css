@@ -1,0 +1,233 @@
+/* CloudFen motion system. Loaded last so every surface shares the same rhythm. */
+:root {
+  --motion-ease: cubic-bezier(.2, .8, .2, 1);
+  --motion-spring: cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes cloudfen-page-in {
+  from { opacity: 0; transform: translate3d(0, 18px, 0) scale(.985); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes cloudfen-panel-in {
+  from { opacity: 0; transform: translate3d(22px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes cloudfen-soft-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -7px, 0); }
+}
+@keyframes cloudfen-aurora {
+  0%, 100% { transform: translate3d(-3%, -2%, 0) scale(1); opacity: .42; }
+  50% { transform: translate3d(4%, 3%, 0) scale(1.08); opacity: .62; }
+}
+@keyframes cloudfen-sheen {
+  from { transform: translateX(-120%) rotate(12deg); }
+  to { transform: translateX(160%) rotate(12deg); }
+}
+@keyframes cloudfen-ring {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(55, 160, 206, .22); }
+  50% { box-shadow: 0 0 0 12px rgba(55, 160, 206, 0); }
+}
+@keyframes cloudfen-blink {
+  0%, 100% { opacity: .5; transform: scale(.96); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+/* A quiet animated atmosphere sits behind the light glass UI. */
+body:has(.app-shell), body.reference-login, body.reference-landing {
+  isolation: isolate;
+  overflow-x: hidden;
+}
+body:has(.app-shell)::before,
+body:has(.app-shell)::after,
+body.reference-login::before,
+body.reference-login::after,
+body.reference-landing::before,
+body.reference-landing::after {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  width: 54vw;
+  height: 54vw;
+  border-radius: 50%;
+  filter: blur(34px);
+  will-change: transform;
+}
+body:has(.app-shell)::before,
+body.reference-login::before,
+body.reference-landing::before {
+  top: -28vw;
+  right: -16vw;
+  background: radial-gradient(circle, rgba(70, 169, 226, .32), transparent 68%);
+  animation: cloudfen-aurora 18s ease-in-out infinite;
+}
+body:has(.app-shell)::after,
+body.reference-login::after,
+body.reference-landing::after {
+  bottom: -30vw;
+  left: -18vw;
+  background: radial-gradient(circle, rgba(201, 117, 214, .24), transparent 68%);
+  animation: cloudfen-aurora 23s ease-in-out -8s infinite reverse;
+}
+
+/* Auth experience: staggered entrance, responsive focus states, and a living panel. */
+body.reference-login .auth-shell { animation: cloudfen-page-in .72s var(--motion-ease) both; }
+body.reference-login .auth-panel { overflow: hidden; }
+body.reference-login .auth-panel::after {
+  animation: cloudfen-aurora 16s ease-in-out infinite;
+  transform-origin: center;
+}
+body.reference-login .auth-panel-logo { animation: cloudfen-panel-in .65s var(--motion-ease) .08s both; }
+body.reference-login .auth-panel h2 { animation: cloudfen-panel-in .65s var(--motion-ease) .16s both; }
+body.reference-login .auth-panel > p { animation: cloudfen-panel-in .65s var(--motion-ease) .24s both; }
+body.reference-login .auth-features { animation: cloudfen-panel-in .65s var(--motion-ease) .32s both; }
+body.reference-login .auth-form-wrap { animation: cloudfen-page-in .7s var(--motion-ease) .1s both; }
+body.reference-login .auth-form-wrap > * { animation: cloudfen-panel-in .55s var(--motion-ease) both; }
+body.reference-login .auth-form-wrap > *:nth-child(2) { animation-delay: .06s; }
+body.reference-login .auth-form-wrap > *:nth-child(3) { animation-delay: .12s; }
+body.reference-login .auth-form-wrap > *:nth-child(4) { animation-delay: .18s; }
+body.reference-login .auth-form-wrap > *:nth-child(5) { animation-delay: .24s; }
+body.reference-login .auth-form-wrap .form-control {
+  transition: transform .25s var(--motion-spring), box-shadow .25s ease, border-color .25s ease, background-color .25s ease;
+}
+body.reference-login .auth-form-wrap .form-control:focus { transform: translateY(-2px); }
+body.reference-login .auth-form-wrap .btn-primary,
+body.reference-login .demo-role-picker button,
+body.reference-login .reference-home-link {
+  transition: transform .25s var(--motion-spring), box-shadow .25s ease, filter .25s ease;
+}
+body.reference-login .auth-form-wrap .btn-primary:hover,
+body.reference-login .demo-role-picker button:hover,
+body.reference-login .reference-home-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(47, 104, 175, .2);
+}
+body.reference-login .auth-feature-item .feat-dot { animation: cloudfen-ring 3.4s ease-in-out infinite; }
+body.reference-login .auth-feature-item:nth-child(2) .feat-dot { animation-delay: .35s; }
+body.reference-login .auth-feature-item:nth-child(3) .feat-dot { animation-delay: .7s; }
+body.reference-login .auth-feature-item:nth-child(4) .feat-dot { animation-delay: 1.05s; }
+
+/* Landing page uses the same entrance language as the authenticated workspace. */
+body.reference-landing .reference-frame { animation: cloudfen-page-in .75s var(--motion-ease) both; }
+body.reference-landing .reference-nav { animation: cloudfen-panel-in .65s var(--motion-ease) .08s both; }
+body.reference-landing .reference-home .reference-intro { animation: cloudfen-panel-in .65s var(--motion-ease) .16s both; }
+body.reference-landing .reference-floating-card { animation: cloudfen-soft-float 7s ease-in-out infinite, cloudfen-page-in .7s var(--motion-ease) .22s both; }
+body.reference-landing .reference-home > h1 { animation: cloudfen-panel-in .65s var(--motion-ease) .3s both; }
+body.reference-landing .reference-footer { animation: cloudfen-panel-in .65s var(--motion-ease) .4s both; }
+body.reference-landing .reference-nav button,
+body.reference-landing .reference-request,
+body.reference-landing .reference-footer a { transition: transform .25s var(--motion-spring), box-shadow .25s ease, background-color .25s ease; }
+body.reference-landing .reference-nav button:hover,
+body.reference-landing .reference-request:hover,
+body.reference-landing .reference-footer a:hover { transform: translateY(-3px); }
+
+/* Authenticated surfaces: glass panels rise in sequence and respond to touch. */
+.app-shell .page-header { animation: cloudfen-panel-in .65s var(--motion-ease) .12s both; }
+.app-shell .card,
+.app-shell .stat-card,
+.app-shell .metric,
+.app-shell .module-card,
+.app-shell .task-card,
+.app-shell .job-card,
+.app-shell .person-card,
+.app-shell .analytics-chart,
+.app-shell .table-card,
+.app-shell .list-card,
+.app-shell .profile-card,
+.app-shell .calendar-card,
+.app-shell .right-rail {
+  position: relative;
+  overflow: hidden;
+  transition: transform .35s var(--motion-spring), box-shadow .35s ease, border-color .3s ease;
+}
+.app-shell .card::after,
+.app-shell .stat-card::after,
+.app-shell .metric::after,
+.app-shell .module-card::after,
+.app-shell .task-card::after,
+.app-shell .job-card::after,
+.app-shell .person-card::after,
+.app-shell .analytics-chart::after,
+.app-shell .table-card::after,
+.app-shell .list-card::after,
+.app-shell .profile-card::after,
+.app-shell .calendar-card::after,
+.app-shell .right-rail::after {
+  content: '';
+  position: absolute;
+  top: -42%;
+  left: -70%;
+  width: 35%;
+  height: 190%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+  opacity: 0;
+  transform: rotate(12deg);
+}
+.app-shell .card:hover::after,
+.app-shell .stat-card:hover::after,
+.app-shell .metric:hover::after,
+.app-shell .module-card:hover::after,
+.app-shell .task-card:hover::after,
+.app-shell .job-card:hover::after,
+.app-shell .person-card:hover::after,
+.app-shell .analytics-chart:hover::after,
+.app-shell .table-card:hover::after,
+.app-shell .list-card:hover::after,
+.app-shell .profile-card:hover::after,
+.app-shell .calendar-card:hover::after,
+.app-shell .right-rail:hover::after { opacity: 1; animation: cloudfen-sheen .8s ease both; }
+.app-shell .card:hover,
+.app-shell .stat-card:hover,
+.app-shell .metric:hover,
+.app-shell .module-card:hover,
+.app-shell .task-card:hover,
+.app-shell .job-card:hover,
+.app-shell .person-card:hover,
+.app-shell .analytics-chart:hover,
+.app-shell .table-card:hover,
+.app-shell .list-card:hover,
+.app-shell .profile-card:hover,
+.app-shell .calendar-card:hover,
+.app-shell .right-rail:hover { transform: translate3d(0, -5px, 0); }
+.app-shell .form-control,
+.app-shell input,
+.app-shell select,
+.app-shell textarea { transition: transform .25s var(--motion-spring), box-shadow .25s ease, border-color .25s ease; }
+.app-shell .form-control:focus,
+.app-shell input:focus,
+.app-shell select:focus,
+.app-shell textarea:focus { transform: translateY(-1px); }
+.app-shell .btn,
+.app-shell .nav-item,
+.app-shell .workspace-tools .btn,
+.app-shell .topbar-right .btn { will-change: transform; }
+.app-shell .sidebar-brand-mark { animation: cloudfen-soft-float 6s ease-in-out infinite; }
+.app-shell .nav-item.active { animation: cloudfen-ring 4s ease-in-out infinite; }
+.app-shell .topbar { backdrop-filter: blur(22px) saturate(1.15); }
+.app-shell .btn:active,
+body.reference-login button:active,
+body.reference-landing button:active { transform: translateY(0) scale(.97); }
+.app-shell tbody tr { transition: background-color .2s ease, transform .2s var(--motion-spring); }
+.app-shell tbody tr:hover { transform: translateX(3px); }
+.app-shell .modal-overlay { animation: cloudfen-page-in .3s ease both; }
+.app-shell .modal { animation: cloudfen-page-in .45s var(--motion-spring) both; }
+.app-shell .toast { animation: cloudfen-panel-in .4s var(--motion-spring) both; }
+.app-shell .upload-zone { transition: transform .25s var(--motion-spring), border-color .25s ease, background-color .25s ease; }
+.app-shell .upload-zone:hover { transform: translateY(-3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  body:has(.app-shell)::before,
+  body:has(.app-shell)::after,
+  body.reference-login::before,
+  body.reference-login::after,
+  body.reference-landing::before,
+  body.reference-landing::after { display: none; }
+}

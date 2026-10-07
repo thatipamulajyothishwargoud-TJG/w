@@ -1,0 +1,191 @@
+/*
+ * CloudFen portal glass system.
+ * Deliberately scoped to the authenticated app shell so the public home and
+ * sign-in compositions keep their existing reference treatment.
+ */
+body:has(.app-shell) {
+  background:
+    radial-gradient(circle at 8% 7%, rgba(151, 99, 207, .36), transparent 34%),
+    radial-gradient(circle at 94% 8%, rgba(55, 166, 218, .34), transparent 37%),
+    radial-gradient(circle at 14% 94%, rgba(244, 137, 151, .32), transparent 34%),
+    linear-gradient(135deg, #e9e9fb 0%, #f8f8fd 47%, #dff2f7 100%);
+  color: #18344d;
+}
+
+body:has(.app-shell) #workspace-background {
+  opacity: .16;
+  filter: saturate(1.25) blur(1px);
+}
+
+.app-shell { background: transparent; }
+
+.app-shell .sidebar {
+  top: 20px;
+  bottom: 20px;
+  left: 20px;
+  border: 1px solid rgba(255,255,255,.62);
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(105,78,177,.82), rgba(60,132,198,.76) 48%, rgba(229,131,150,.76)) !important;
+  box-shadow: 0 26px 70px rgba(58,53,115,.2), inset 0 1px 0 rgba(255,255,255,.72);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+  backdrop-filter: blur(24px) saturate(135%);
+}
+
+.app-shell .sidebar-logo,
+.app-shell .sidebar-footer {
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(255,255,255,.25);
+}
+
+.app-shell .sidebar-logo { min-height: 68px; }
+.app-shell .sidebar-brand { display: flex; align-items: center; gap: 9px; color: #fff; font-size: 1.24rem; font-weight: 800; letter-spacing: -.035em; }
+.app-shell .sidebar-brand-mark { width: 30px; height: 24px; color: #fff; flex: 0 0 auto; filter: drop-shadow(0 3px 8px rgba(20,33,84,.18)); }
+.app-shell .sidebar-logo::before { content: none !important; background: rgba(255,255,255,.08); }
+.app-shell .sidebar-close,
+.app-shell .sidebar-user-info .name,
+.app-shell .sidebar-user-info .role-label,
+.app-shell .sidebar-avatar,
+.app-shell .nav-section,
+.app-shell .nav-item { color: #fff; }
+.app-shell .sidebar-user-info .role-label { color: rgba(255,255,255,.72); }
+.app-shell .sidebar-avatar { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.35); }
+.app-shell .nav-item { border: 1px solid transparent; color: #fff !important; }
+.app-shell .nav-item:hover,
+.app-shell .nav-item.active { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.2); color: #fff; }
+.app-shell .sidebar-footer .btn { color: #214565; background: rgba(255,255,255,.8); border-color: rgba(255,255,255,.9); }
+
+.app-shell .main-content { background: transparent; }
+.app-shell .topbar {
+  margin: 20px 20px 0;
+  min-height: var(--topbar-h);
+  height: auto;
+  border: 1px solid rgba(255,255,255,.76);
+  border-radius: 20px;
+  background: linear-gradient(110deg, rgba(255,255,255,.72), rgba(236,247,255,.52) 52%, rgba(255,255,255,.64)) !important;
+  box-shadow: 0 16px 40px rgba(50,80,120,.1), inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter: blur(22px) saturate(135%);
+  backdrop-filter: blur(22px) saturate(135%);
+}
+.app-shell .topbar-title { color: #18344d; }
+.app-shell .workspace-tools { display: flex; gap: 10px; }
+.app-shell .workspace-tools .btn,
+.app-shell .topbar-right .btn { color: #245373; border-width: 1px; border-style: solid; box-shadow: inset 0 1px rgba(255,255,255,.88), 0 5px 16px rgba(68,95,150,.07); }
+.app-shell .workspace-tools .btn:nth-child(1) { background: rgba(111,161,226,.2); border-color: rgba(72,131,205,.32); color: #245b82; }
+.app-shell .workspace-tools .btn:nth-child(2) { background: rgba(151,111,215,.17); border-color: rgba(128,86,196,.3); color: #5c428f; }
+.app-shell .workspace-tools .btn:nth-child(3) { background: rgba(81,185,180,.18); border-color: rgba(45,151,151,.3); color: #247375; }
+.app-shell .topbar-right .btn { background: rgba(244,177,111,.22); border-color: rgba(219,139,61,.34); color: #965a23; }
+.app-shell .workspace-tools .btn:hover,
+.app-shell .topbar-right .btn:hover { background: rgba(255,255,255,.78); }
+.app-shell .workspace-tools .btn:nth-child(1):hover { background: rgba(111,161,226,.36); }
+.app-shell .workspace-tools .btn:nth-child(2):hover { background: rgba(151,111,215,.32); }
+.app-shell .workspace-tools .btn:nth-child(3):hover { background: rgba(81,185,180,.34); }
+.app-shell .topbar-right .btn:hover { background: rgba(244,177,111,.38); }
+
+.app-shell .page-body { max-width: 1540px; }
+.app-shell .card,
+.app-shell .stat-card,
+.app-shell .metric,
+.app-shell .module-card,
+.app-shell .analytics-chart,
+.app-shell .task-column,
+.app-shell .task-card,
+.app-shell .job-card,
+.app-shell .overview-hero,
+.app-shell .workspace-hero,
+.app-shell .profile-card,
+.app-shell .right-rail,
+.app-shell .calendar-card,
+.app-shell .people-table,
+.app-shell .data-table-wrap,
+.app-shell .table-card,
+.app-shell .list-card {
+  background: rgba(255,255,255,.59);
+  border: 1px solid rgba(255,255,255,.84);
+  border-radius: 20px;
+  box-shadow: 0 18px 42px rgba(73,90,142,.12), inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  backdrop-filter: blur(20px) saturate(135%);
+}
+
+.app-shell .card-header,
+.app-shell .table-header,
+.app-shell .list-header { border-color: rgba(111,139,169,.16); }
+.app-shell h1,
+.app-shell h2,
+.app-shell h3,
+.app-shell h4,
+.app-shell .page-title,
+.app-shell .section-title { color: #173652; }
+.app-shell p,
+.app-shell .muted,
+.app-shell .text-muted,
+.app-shell .helper-text { color: #5a7186; }
+.app-shell .form-control,
+.app-shell input,
+.app-shell select,
+.app-shell textarea {
+  color: #1c3b55;
+  background: rgba(255,255,255,.7);
+  border-color: rgba(255,255,255,.92);
+  box-shadow: inset 0 1px 2px rgba(41,78,112,.05);
+}
+.app-shell .form-control:focus,
+.app-shell input:focus,
+.app-shell select:focus,
+.app-shell textarea:focus { border-color: rgba(70,136,219,.6); box-shadow: 0 0 0 3px rgba(70,136,219,.13); }
+.app-shell .btn-outline { color: #225373; background: rgba(255,255,255,.48); border-color: rgba(255,255,255,.84); }
+.app-shell .btn-primary { background: linear-gradient(135deg,#246bd7,#8053c9); border-color: transparent; box-shadow: 0 10px 22px rgba(74,87,207,.22); }
+.app-shell .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.app-shell .badge,
+.app-shell .status-pill,
+.app-shell .priority-pill { border: 1px solid rgba(255,255,255,.7); box-shadow: inset 0 1px rgba(255,255,255,.7); }
+.app-shell .appearance-picker { display: none !important; }
+
+@media (max-width: 1024px) {
+  .app-shell .sidebar { top: 0; bottom: 0; left: 0; border-radius: 0 22px 22px 0; }
+  .app-shell .topbar { margin: 10px 10px 0; border-radius: 16px; }
+}
+
+/* The sign-in composition keeps its existing layout and animation, with a
+   high-contrast black type treatment requested for the opening screen. */
+body.reference-login .auth-panel-logo::before,
+body.reference-login .auth-panel h2,
+body.reference-login .auth-panel h2 span,
+body.reference-login .auth-panel > p,
+body.reference-login .reference-home-link,
+body.reference-login .auth-form-wrap,
+body.reference-login .auth-form-wrap h1,
+body.reference-login .auth-form-wrap .sub,
+body.reference-login .auth-form-wrap label,
+body.reference-login .auth-form-wrap a,
+body.reference-login .demo-login-note,
+body.reference-login .demo-role-picker button,
+body.reference-login .auth-form-wrap .form-control {
+  color: #111827 !important;
+}
+
+body.reference-login .reference-home-link,
+body.reference-login .demo-role-picker button,
+body.reference-login .auth-form-wrap .form-control {
+  background: rgba(255,255,255,.82);
+  border-color: rgba(17,24,39,.18);
+}
+
+body.reference-login .demo-role-picker button[aria-pressed="true"] {
+  background: rgba(17,24,39,.1);
+  border-color: rgba(17,24,39,.42);
+}
+
+body.reference-login .auth-form-wrap .btn-primary,
+body.reference-login .scene-controls,
+body.reference-login .scene-controls button,
+body.reference-login .background-motion-control,
+body.reference-login input::placeholder {
+  color: #111827 !important;
+}
+
+body.reference-login .auth-form-wrap .btn-primary {
+  background: rgba(255,255,255,.84);
+  border-color: rgba(17,24,39,.22);
+}

@@ -1,0 +1,15 @@
+# ── auth/ — Login, register, password reset: no caching, no indexing ────
+Options -Indexes -ExecCGI -Includes
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header always set Pragma "no-cache"
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>
+<LimitExcept GET POST HEAD>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</LimitExcept>

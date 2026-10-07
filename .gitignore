@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+*.log
+error_log
+*.bak
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local and uploaded HR data
+/uploads/
+/storage/
+/private/
+/hrportal-private/
+/deploy/
+/config/config.local.php
+
+# Local database and runtime files
+*.pid
+*.sock
+mysql-data/

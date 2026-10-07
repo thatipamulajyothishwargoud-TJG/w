@@ -1,0 +1,18 @@
+# ── admin/ — deny direct access; all pages go through PHP role checks ──
+Options -Indexes -ExecCGI -Includes
+# Block non-human/scanner user agents
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Deny requests with no User-Agent (scanners)
+    RewriteCond %{HTTP_USER_AGENT} ^-?$ [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+# Only GET and POST allowed in admin
+<LimitExcept GET POST HEAD>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</LimitExcept>

@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS project_tasks (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ project_id INT UNSIGNED NOT NULL,
+ title VARCHAR(200) NOT NULL,
+ state ENUM('todo','in_progress','done') NOT NULL DEFAULT 'todo',
+ priority ENUM('low','normal','high') NOT NULL DEFAULT 'normal',
+ due_date DATE NULL,
+ created_by INT UNSIGNED NOT NULL,
+ version INT UNSIGNED NOT NULL DEFAULT 1,
+ created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ KEY project_state(project_id,state),
+ FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE,
+ FOREIGN KEY(created_by) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS workspace_people (
+ user_id INT UNSIGNED PRIMARY KEY,
+ department VARCHAR(80) NOT NULL DEFAULT 'General',
+ job_title VARCHAR(120) NOT NULL DEFAULT 'Team member',
+ location VARCHAR(100) NOT NULL DEFAULT 'Remote',
+ is_demo TINYINT(1) NOT NULL DEFAULT 0,
+ avatar_color VARCHAR(7) NOT NULL DEFAULT '#a992ed',
+ FOREIGN KEY(user_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

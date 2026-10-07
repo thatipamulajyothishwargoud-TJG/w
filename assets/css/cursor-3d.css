@@ -1,0 +1,105 @@
+/* Custom pointer is enabled only inside the authenticated portal shell. */
+@media (pointer: fine) {
+  .app-shell.portal-cursor-active,
+  .app-shell.portal-cursor-active * { cursor: none !important; }
+
+  .portal-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 42px;
+    height: 42px;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(-100px,-100px,0) translate(-50%,-50%);
+    transition: opacity .2s ease, width .18s ease, height .18s ease;
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+
+  .portal-cursor.is-visible { opacity: 1; }
+  .portal-cursor::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(70,151,227,.3), rgba(127,88,205,.12) 46%, transparent 72%);
+    filter: blur(4px);
+    transform: translateZ(-8px) scale(1.35);
+  }
+  .portal-cursor::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(255,255,255,.82);
+    border-radius: 50%;
+    box-shadow: 0 5px 18px rgba(52,89,162,.22), inset 0 1px rgba(255,255,255,.9);
+    transform: translateZ(-2px);
+  }
+  .portal-cursor-arrow {
+    position: absolute;
+    left: 9px;
+    top: 5px;
+    width: 27px;
+    height: 33px;
+    filter: drop-shadow(4px 6px 2px rgba(36,57,111,.28));
+    transform: translateZ(12px) rotateX(7deg) rotateY(-8deg);
+    transform-origin: 20% 20%;
+    transition: transform .18s ease;
+  }
+  .portal-cursor-arrow svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .portal-cursor-arrow .cursor-face { fill: #fff; stroke: #17466d; stroke-width: 2.2; stroke-linejoin: round; }
+  .portal-cursor-arrow .cursor-edge { fill: #8ed5eb; opacity: .9; }
+  .portal-cursor.is-hover { width: 54px; height: 54px; }
+  .portal-cursor.is-hover .portal-cursor-arrow { transform: translateZ(16px) rotateX(7deg) rotateY(-8deg) scale(1.12); }
+  .portal-cursor.is-press .portal-cursor-arrow { transform: translateZ(8px) rotateX(7deg) rotateY(-8deg) scale(.9); }
+
+  .portal-cursor-light {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    z-index: 9997;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle, rgba(255,255,255,.22), rgba(121,187,239,.08) 38%, transparent 72%);
+    mix-blend-mode: screen;
+    filter: blur(10px);
+    transition: opacity .3s ease;
+    will-change: transform;
+  }
+  .portal-cursor-light.is-visible { opacity: .75; }
+  .portal-cursor-trail {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 10px;
+    height: 10px;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 50%;
+    background: #8fd9ef;
+    box-shadow: 0 0 16px rgba(104,177,235,.5);
+    transition: opacity .2s ease, width .2s ease, height .2s ease;
+    will-change: transform;
+  }
+  .portal-cursor-trail.is-visible { opacity: .45; }
+  .portal-cursor-trail.trail-2 { width: 7px; height: 7px; opacity: .28; background: #b68fe9; }
+  .portal-cursor-trail.trail-3 { width: 4px; height: 4px; opacity: .2; background: #f1a9bb; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portal-cursor { transition: opacity .2s ease; }
+    .portal-cursor-arrow { transition: none; }
+    .portal-cursor-light,
+    .portal-cursor-trail { display: none; }
+  }
+}
+
+@media (pointer: coarse) {
+  .portal-cursor { display: none !important; }
+}

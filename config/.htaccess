@@ -1,0 +1,9 @@
+# Defence-in-depth: block direct web access to everything in this folder.
+# The real secrets are stored outside public_html — this is just a loader.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

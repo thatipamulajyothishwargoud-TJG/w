@@ -1,0 +1,9 @@
+<?php
+require_once __DIR__.'/../config/config.php';require_once __DIR__.'/../includes/helpers.php';require_once __DIR__.'/../includes/security.php';
+sendSecurityHeaders();sendNoCacheHeaders();$user=requireAnyRole();header('Content-Type: application/json; charset=utf-8');
+$term=trim((string)($_GET['q']??''));if(strlen($term)<2){echo '[]';exit;}$term=substr($term,0,80);$pattern='%'.str_replace(['!','%','_'],['!!','!%','!_'],$term).'%';$db=getDB();$admin=in_array($user['role'],['hr_admin','super_admin'],true);$results=[];
+if($admin){$q=$db->prepare("SELECT id,full_name FROM users WHERE full_name LIKE ? ESCAPE '!' OR email LIKE ? ESCAPE '!' LIMIT 8");$q->execute([$pattern,$pattern]);foreach($q as $r)$results[]=['label'=>$r['full_name'],'type'=>'Employee','url'=>'/admin/employees.php'];}
+$q=$db->prepare("SELECT document_name,doc_type FROM documents WHERE (document_name LIKE ? ESCAPE '!' OR doc_type LIKE ? ESCAPE '!')".($admin?'':' AND user_id=?').' LIMIT 8');$q->execute($admin?[$pattern,$pattern]:[$pattern,$pattern,$user['id']]);foreach($q as $r)$results[]=['label'=>$r['document_name']?:$r['doc_type'],'type'=>'Document','url'=>$admin?'/admin/documents.php':'/employee/documents.php'];
+$q=$db->prepare("SELECT project_name FROM projects WHERE project_name LIKE ? ESCAPE '!'".($admin?'':' AND employee_id=?').' LIMIT 8');$q->execute($admin?[$pattern]:[$pattern,$user['id']]);foreach($q as $r)$results[]=['label'=>$r['project_name'],'type'=>'Project','url'=>$admin?'/admin/project_details.php':'/employee/projects.php'];
+if($admin&&tableExists('job_openings')){$q=$db->prepare("SELECT title FROM job_openings WHERE title LIKE ? ESCAPE '!' LIMIT 8");$q->execute([$pattern]);foreach($q as $r)$results[]=['label'=>$r['title'],'type'=>'Job','url'=>'/admin/manage_jobs.php'];}
+echo json_encode($results,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);

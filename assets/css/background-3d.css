@@ -1,0 +1,18 @@
+body{isolation:isolate;background:#080f1e}
+#workspace-background{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 20% 50%,#1c485544,transparent 60%),radial-gradient(ellipse at 90% 20%,#35427740,transparent 50%)}
+#workspace-background canvas{width:100%;height:100%;display:block}
+.app-shell{background:transparent}.page-body{background:transparent}
+.card,.stat-card{background:linear-gradient(145deg,#192940eb,#111d31e8);backdrop-filter:blur(12px)}
+.workspace-hero{background:linear-gradient(120deg,#172b40eb,#102035b0);backdrop-filter:blur(8px)}
+.sidebar{background:linear-gradient(165deg,#101c31ed,#080f1ef2);backdrop-filter:blur(18px)}
+.auth-shell{background:transparent;position:relative}
+.auth-panel{background:linear-gradient(180deg,#0b162866,#0c172b33);border-right:1px solid #80dfca20;justify-content:flex-start;padding-top:58px;min-height:100vh}
+.auth-panel:before,.auth-panel:after{display:none}.auth-panel-logo{margin-bottom:60px}
+.auth-panel h2{font-size:clamp(38px,4vw,58px);max-width:570px;text-shadow:0 3px 25px #05101d}
+.auth-panel p{max-width:440px;text-shadow:0 2px 8px #05101d}.auth-features{margin-top:auto;padding-top:240px;padding-bottom:30px}
+.auth-feature-item{color:#d1e0ed}.auth-3d{display:none}
+.auth-form-wrap{background:linear-gradient(150deg,#101e32dc,#0d182be8);backdrop-filter:blur(22px);border-left:1px solid #ffffff0c}
+.background-motion-control{position:fixed;right:18px;bottom:14px;z-index:110;padding:9px 13px;border-radius:30px;border:1px solid #80dfca40;background:#101e32ec;color:#baf2e5;font:11px var(--font);letter-spacing:.04em;backdrop-filter:blur(12px);cursor:pointer;box-shadow:0 4px 22px #0004}
+.background-motion-control:hover{border-color:#80dfca;background:#1a3247}.background-motion-control:disabled{cursor:default;color:#a9bdd0}.page-body{padding-bottom:64px}
+@media(max-width:1024px){.auth-form-wrap{background:#0d182bbb;min-height:100vh}.auth-form-wrap form{padding:22px;border-radius:18px;background:#0e1b30d9;border:1px solid #80dfca20;box-shadow:0 20px 65px #0004}.auth-form-wrap h1,.auth-form-wrap .sub{position:relative;z-index:1}.auth-form-wrap{padding-bottom:70px}}
+@media(max-width:640px){.background-motion-control{right:12px;bottom:12px}.card,.stat-card{backdrop-filter:none}.auth-form-wrap{padding:26px;justify-content:center}}

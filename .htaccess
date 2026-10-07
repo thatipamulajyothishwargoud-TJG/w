@@ -1,0 +1,144 @@
+# ═══════════════════════════════════════════════════════════════
+# CloudFen HR Portal — Root .htaccess  (v14 — Layer 2 hardened)
+# ═══════════════════════════════════════════════════════════════
+
+# ── PHP 8.2 via EasyApache 4 ──────────────────────────────────
+<IfModule mime_module>
+    AddHandler application/x-httpd-ea-php82 .php .php8
+</IfModule>
+
+# ── PHP Runtime Hardening ──────────────────────────────────────
+<IfModule php8_module>
+    php_value upload_max_filesize   20M
+    php_value post_max_size         22M
+    php_value memory_limit          256M
+    php_value max_execution_time    60
+    php_value max_input_time        60
+    php_flag  display_errors        Off
+    php_flag  log_errors            On
+    php_value error_reporting       32767
+    php_flag  expose_php            Off
+    php_flag  allow_url_include     Off
+    php_flag  allow_url_fopen       Off
+    php_value session.cookie_httponly  On
+    php_value session.cookie_samesite  Lax
+    php_value session.use_strict_mode  On
+    php_value session.gc_maxlifetime   1800
+    php_value session.use_trans_sid    0
+    php_value session.cookie_path      /
+    php_value open_basedir             /home:/tmp:/usr/share/php
+</IfModule>
+
+# ── Global Security Options ────────────────────────────────────
+Options -Indexes -ExecCGI -Includes -MultiViews
+ServerSignature Off
+
+# ── Hide Server & PHP Version Headers ─────────────────────────
+<IfModule mod_headers.c>
+    Header always unset X-Powered-By
+    Header always unset Server
+</IfModule>
+
+# ── Deny access to dangerous file extensions ──────────────────
+<FilesMatch "\.(?i)(bak|sql|log|sh|bash|env|ini|conf|cfg|pem|key|crt|DS_Store|htpasswd|swp|swo|orig|tmp|cache|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ── Deny access to PHP's default error_log files (no extension) ──
+<Files "error_log">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</Files>
+
+# ── Block common exploit scanners & bad bots ──────────────────
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Render terminates TLS at the edge. Do not redirect here: Apache receives
+    # proxied requests and an application-level HTTPS redirect can loop.
+
+    # Block hidden files (.env, .git, .htaccess probing)
+    RewriteRule (^|/)\. - [F,L]
+
+    # Block access to config/ directory via URL
+    RewriteRule ^config/ - [F,L]
+
+    # Block access to includes/ directory directly
+    RewriteRule ^includes/ - [F,L]
+
+    # Block access to vendor/ directory directly
+    RewriteRule ^vendor/ - [F,L]
+
+    # Block PHP execution in upload directories
+    RewriteCond %{REQUEST_URI} /cf.?uploads/ [NC]
+    RewriteRule \.php - [F,L]
+
+    # Block common exploit/scanner paths
+    RewriteCond %{REQUEST_URI} ^/(wp-admin|wp-login|xmlrpc|phpmyadmin|myadmin|mysql|pma|shell|eval|c99|r57|b374k|webshell|cmd|exec) [NC]
+    RewriteRule .* - [F,L]
+
+    # Block SQL injection in query string
+    RewriteCond %{QUERY_STRING} (union.*select|insert.*into|drop.*table|select.*from|benchmark\(|sleep\() [NC]
+    RewriteRule .* - [F,L]
+
+    # Block null byte attacks
+    RewriteCond %{QUERY_STRING} \0 [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# ── Security Headers ───────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; worker-src 'none'; manifest-src 'none';"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Cross-Origin-Resource-Policy "same-origin"
+</IfModule>
+
+# ── Limit HTTP methods (only GET, POST, HEAD allowed) ─────────
+<LimitExcept GET POST HEAD>
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Deny from all
+    </IfModule>
+</LimitExcept>
+
+# ── Cache static assets ────────────────────────────────────────
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css               "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/png              "access plus 30 days"
+    ExpiresByType image/jpeg             "access plus 30 days"
+    ExpiresByType image/x-icon           "access plus 30 days"
+    ExpiresByType image/svg+xml          "access plus 7 days"
+</IfModule>
+
+# ── Compress text resources ────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css application/javascript text/plain
+</IfModule>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php83” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

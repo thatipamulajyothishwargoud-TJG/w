@@ -1,0 +1,4 @@
+<?php
+require_once __DIR__.'/../includes/module-shell.php';
+$q=$db->prepare('SELECT project_name,client_name,point_of_contact,created_at FROM projects WHERE employee_id=? ORDER BY created_at DESC');$q->execute([$user['id']]);$projects=$q->fetchAll();moduleStart('My projects',$user);?>
+<div class="module-grid"><?php foreach($projects as $p):?><article class="card"><div class="card-body"><div class="eyebrow"><?=e($p['client_name'])?></div><h3><?=e($p['project_name'])?></h3><p>Contact: <?=e($p['point_of_contact']??'Contact HR')?></p><a class="btn btn-outline" style="margin-top:18px" href="/employee/timesheets.php">Log project hours ↗</a></div></article><?php endforeach;?></div><?php if(!$projects):?><div class="card empty-state">No projects assigned yet. Your assignments will appear here.</div><?php endif;moduleEnd();
