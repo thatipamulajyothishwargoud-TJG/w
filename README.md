@@ -18,15 +18,9 @@ CloudFen is a PHP and MySQL HR portal with separate employee and HR/admin workfl
 
 Each sign-in route checks the account role before creating a session. Employees see their own work, HR Managers get people operations and approvals, and Administrators keep system-wide controls. The general `/auth/login.php` page also links to all three portals.
 
-## Deploy the full application to Render
+## Deploy the full application
 
-The repository includes a Render Blueprint for a PHP web service, a private MySQL 8.4 service, and persistent disks for the database and employee uploads. In Render, create a new Blueprint from this repository's `main` branch. The Blueprint creates a separate `cloudfen-hrportal-v2` service and does not modify the older `cloudfen-hrportal` service.
-
-During Blueprint setup, Render generates the administrator password, demo-account password, database passwords, and JWT secret. Keep these values in Render's environment settings and never copy them into GitHub. The web service initializes the schema and fictional employee/demo records when it starts. Demo sign-in credentials are available in the service's environment settings after deployment.
-
-The persistent disks make uploaded documents and MySQL records survive restarts and redeploys. Render charges for the two paid service instances and their disk storage; review the Blueprint's displayed monthly estimate before creating the services. If you need a no-cost preview, remove the persistent disks and use free instances only with the understanding that records and uploads can be lost when Render restarts or redeploys them.
-
-After the Blueprint is live, open the new web service URL and sign in with the administrator email and generated password. Keep the database service private; only the PHP web service needs a public URL.
+This app needs a PHP runtime, MySQL, and persistent storage; it is not a static site. The repository's root `Dockerfile` provides the PHP 8.3 + Apache web service. For Railway setup, MySQL variable mapping, persistent storage, secrets, SMTP, and post-deploy checks, see [`DEPLOY_RAILWAY.md`](DEPLOY_RAILWAY.md). Review hosting and database costs before provisioning services.
 
 ## Run on this workstation
 
