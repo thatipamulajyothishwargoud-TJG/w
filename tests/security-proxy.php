@@ -24,4 +24,8 @@ assertSecureRequest(true, 'trusted forwarded SSL');
 $_SERVER = ['REMOTE_ADDR' => '198.51.100.24', 'HTTPS' => 'on'];
 assertSecureRequest(true, 'direct HTTPS connection');
 
+define('APP_URL', 'https://hrportal.example.test');
+$_SERVER = ['REMOTE_ADDR' => '198.51.100.24'];
+assertSecureRequest(true, 'configured HTTPS origin behind an external proxy');
+
 echo "PASS trusted proxy and direct HTTPS detection\n";

@@ -1,0 +1,3 @@
+[build]
+  command = "node tools/netlify-build.mjs"
+  publish = "netlify-dist"

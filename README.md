@@ -20,7 +20,7 @@ Each sign-in route checks the account role before creating a session. Employees 
 
 ## Deploy the full application
 
-This app needs a PHP runtime, MySQL, and persistent storage; it is not a static site. The repository's root `Dockerfile` provides the PHP 8.3 + Apache web service. For Railway setup, MySQL variable mapping, persistent storage, secrets, SMTP, and post-deploy checks, see [`DEPLOY_RAILWAY.md`](DEPLOY_RAILWAY.md). Review hosting and database costs before provisioning services.
+This app needs a PHP runtime, MySQL, and persistent storage; it is not a static site. For the requested Netlify URL, Netlify proxies the full site to the PHP/MySQL backend. Follow [`DEPLOY_NETLIFY.md`](DEPLOY_NETLIFY.md) for both parts. The backend uses this repository's root `Dockerfile`; [`DEPLOY_RAILWAY.md`](DEPLOY_RAILWAY.md) covers its MySQL variables, persistent storage, secrets, SMTP, and checks. Review backend hosting costs before provisioning services.
 
 ## Run on this workstation
 

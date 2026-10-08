@@ -88,6 +88,14 @@ function isSecureRequest(): bool {
 
     }
 
+    // APP_URL is deployment-controlled configuration. When it declares the
+    // public origin as HTTPS, the browser-facing connection is secure even if
+    // a hosting proxy terminates TLS before the PHP container receives it.
+    $publicAppUrl = strtolower(trim(defined('APP_URL') ? APP_URL : ''));
+    if (str_starts_with($publicAppUrl, 'https://')) {
+        return true;
+    }
+
     // Forwarding headers are controlled by the connecting client unless the
     // request came from a proxy explicitly trusted by the deployment.
     $remoteAddr = trim(getServerVar('REMOTE_ADDR', ''));

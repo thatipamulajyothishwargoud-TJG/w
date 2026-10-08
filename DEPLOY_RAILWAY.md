@@ -15,7 +15,7 @@ Configure these variables on the web service. Use Railway reference variables fo
 | Variable | Value |
 | --- | --- |
 | `APP_NAME` | `CloudFen HR Workspace` |
-| `APP_URL` | The HTTPS domain generated for the web service, after generating it |
+| `APP_URL` | The public HTTPS URL; when using the Netlify proxy, use the Netlify site URL (see [`DEPLOY_NETLIFY.md`](DEPLOY_NETLIFY.md)) |
 | `APP_TIMEZONE` | `Asia/Kolkata` |
 | `APP_DEMO_MODE` | `true` to initialize the fictional demo profiles and demo sign-ins |
 | `DB_HOST` | `${{MySQL.MYSQLHOST}}` |
